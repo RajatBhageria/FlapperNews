@@ -1,27 +1,47 @@
+angular.module('flapperNews', ['ui.router'])
 var app = angular.module('flapperNews', []);
+
+app.config([
+	'$stateProvider',
+	'$urlRouterProvider',
+	function($stateProvider, $urlRouterProvider){
+
+		$stateProvider
+			.state('home',{
+				url: '/home',
+				templateUrl: '/home.html',
+				controller: 'MainCtrl'
+			});
+			.state('posts', {
+				url:'/posts/{id}',
+				templateUrl: '/posts.html',
+				controller: 'PostCtrl'
+			});
+		$urlRouterProvider.otherwise('home');
+}]);
 
 app.factory('posts', [function(){
 	var o = {
 		posts: []
-	}
+	};
 	return o; 
 }]);
+
 app.controller('MainCtrl', [
 '$scope',
-function($scope){
-	$scope.posts = [
-		{title: 'post 1', upvotes: 5},
-		{title: 'post 2', upvotes: 7},
-		{title: 'post 3', upvotes: 9},
-		{title: 'post 4', upvotes: 51},
-		{title: 'post 5', upvotes: 1},
-	];
+'posts',
+function($scope, posts){
+	$scope.posts = posts.posts;	
 	$scope.addPost = function(){
 		if (!$scope.title || $scope.title === '') {return;}
 		$scope.posts.push({
 			title: $scope.title, 
+			link: $scope.link,
 			upvotes: 0,
-			link: $scope.link
+			comments: [
+				{author: 'Joe', body: 'Cool post!', upvotes: 0},
+				{author: 'Bob', body: 'Great idea!', upvotes: 2}
+			]
 		});
 		$scope.title='';
 		$scope.link='';
@@ -32,4 +52,12 @@ function($scope){
 	$scope.decrementUpvotes = function(post){
 		post.upvotes -=1;
 	}
-}])
+}]);
+
+app.controller('PostCtrl', [
+'$scope',
+'stateParams',
+'posts',
+function($scope, stateParams, posts){
+
+}]);
