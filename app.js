@@ -7,16 +7,18 @@ app.config([
 	function($stateProvider, $urlRouterProvider){
 
 		$stateProvider
-			.state('home',{
-				url: '/home',
-				templateUrl: '/home.html',
-				controller: 'MainCtrl'
-			});
+			.state('home', {
+					url: '/home',
+					templateUrl: '/home.html',
+					controller: 'MainCtrl'
+				}
+			);
 			.state('posts', {
-				url:'/posts/{id}',
-				templateUrl: '/posts.html',
-				controller: 'PostCtrl'
-			});
+					url:'/posts/{id}',
+					templateUrl: '/posts.html',
+					controller: 'PostCtrl'
+				}
+			);
 		$urlRouterProvider.otherwise('home');
 }]);
 
@@ -59,5 +61,14 @@ app.controller('PostCtrl', [
 'stateParams',
 'posts',
 function($scope, stateParams, posts){
-
-}]);
+	$scope.post = posts.posts[$stateParams.id];
+	$scope.addPost = function(){
+		if ($scope.body === ''){return;}
+		$scope.post.comments.push(
+			body: $scope.body, 
+			author: 'user',
+			upvotes: 0
+		)};
+		$scope.body = '';
+	};
+]);
